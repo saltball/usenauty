@@ -1,9 +1,8 @@
 project("libnauty" VERSION 1.2.3)
 
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_STANDARD 14)
-
 include_directories("${CMAKE_SOURCE_DIR}/include")
+
+
 
 # Set some compiler options
 SET(SMALL "-DMAXN=WORDSIZE")
@@ -13,6 +12,7 @@ SET(L1 "-DMAXN=WORDSIZE -DWORDSIZE=64")
 SET(S "-DWORDSIZE=16")
 SET(W "-DWORDSIZE=32")
 SET(L "-DWORDSIZE=64")
+SET(USELIB "-DASLIB")
 
 # Set some obj targets
 # add_library(nauty OBJECT nauty.c)
@@ -70,20 +70,22 @@ SET(L "-DWORDSIZE=64")
 
 
 FILE(GLOB NAUTY nauty.c nautil.c nausparse.c naugraph.c schreier.c naurng.c)
-FILE(GLOB NAUTYLIB_USE traces.c gtools.c naututil.c nautinv.c gutil1.c gutil2.c gtnauty.c naugroup.c)
+FILE(GLOB NAUTYLIB_USE traces.c gtools.c naututil.c nautinv.c gutil1.c gutil2.c gtnauty.c naugroup.c showg.c)
+FILE(GLOB ULTI times.c)
 
 
 
 add_library(nauty ${NAUTY} ${NAUTYLIB_USE})
-add_library(nauty1 ${NAUTY} ${NAUTYLIB_USE})
-SET_TARGET_PROPERTIES(nauty1 PROPERTIES COMPILE_FLAGS "${SMALL}")
-add_library(nautyW ${NAUTY} ${NAUTYLIB_USE})
-SET_TARGET_PROPERTIES(nautyW PROPERTIES COMPILE_FLAGS "${W}")
-add_library(nautyW1 ${NAUTY} ${NAUTYLIB_USE})
-SET_TARGET_PROPERTIES(nautyW1 PROPERTIES COMPILE_FLAGS "${W1}")
-add_library(nautyL ${NAUTY} ${NAUTYLIB_USE})
-SET_TARGET_PROPERTIES(nautyL PROPERTIES COMPILE_FLAGS "${L}")
-add_library(nautyL1 ${NAUTY} ${NAUTYLIB_USE})
-SET_TARGET_PROPERTIES(nautyL1 PROPERTIES COMPILE_FLAGS "${L1}")
+SET_TARGET_PROPERTIES(nauty PROPERTIES COMPILE_FLAGS "${USELIB}")
+add_library(nauty1  ${NAUTY} ${NAUTYLIB_USE})
+SET_TARGET_PROPERTIES(nauty1 PROPERTIES COMPILE_FLAGS "${SMALL} ${USELIB}")
+add_library(nautyW  ${NAUTY} ${NAUTYLIB_USE})
+SET_TARGET_PROPERTIES(nautyW PROPERTIES COMPILE_FLAGS "${W} ${USELIB}")
+add_library(nautyW1   ${NAUTY} ${NAUTYLIB_USE})
+SET_TARGET_PROPERTIES(nautyW1 PROPERTIES COMPILE_FLAGS "${W1} ${USELIB}")
+add_library(nautyL  ${NAUTY} ${NAUTYLIB_USE})
+SET_TARGET_PROPERTIES(nautyL PROPERTIES COMPILE_FLAGS "${L} ${USELIB}")
+add_library(nautyL1  ${NAUTY} ${NAUTYLIB_USE})
+SET_TARGET_PROPERTIES(nautyL1 PROPERTIES COMPILE_FLAGS "${L1} ${USELIB}")
 
-# add_executable(dreadnaut dreadnaut.c naututil.c nautinv.c traces.c gtools.c ${NAUTY})
+add_executable(vcolg vcolg.c gtnauty.c naututil.c nautinv.c gtools.c naugroup.c ${NAUTY} ${ULTI})

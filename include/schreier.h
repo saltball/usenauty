@@ -1,5 +1,5 @@
 /* schreier.h - Version 1.2 (January 2013) */
-
+#pragma once
 #ifndef  _SCHREIER_H_    /* only process this file once */
 #define  _SCHREIER_H_
 

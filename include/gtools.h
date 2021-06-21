@@ -8,7 +8,7 @@
 creating gtools.h out of gtools-h.in.  If configure is not being
 used, it is necessary to check they are correct.
 ====================================================================*/
-
+#pragma once
 #ifndef  _GTOOLS_H_    /* only process this file once */
 #define  _GTOOLS_H_
 
@@ -17,7 +17,7 @@ used, it is necessary to check they are correct.
 #define HAVE_PIPE  1          /* pipe() exists */
 #define HAVE_WAIT  1          /* wait() exists */
 #define HAVE_WAIT_H  1     /* <sys/wait.h> exists */
-#define HAVE_POPEN  1          /* popen() and pclose() exist */
+#define HAVE_POPEN  0          /* popen() and pclose() exist */
 #define POPEN_DEC  1         /* popen() is declared */
 #define FTELL_DEC  1         /* ftell() is declared */
 #define FDOPEN_DEC  1        /* fdopen() is declared */
@@ -32,7 +32,7 @@ used, it is necessary to check they are correct.
 #define HAVE_PTHREADS 0   /* Posix threads exist */
 #define HAVE_PTHREAD_H  1      /* <pthread.h> exists */
 #define HAVE_SIGNAL_H  1      /* <signal.h> exists */
-#define HAVE_FSEEKO 1  /* fseeko() and ftello() exist */
+#define HAVE_FSEEKO 0  /* fseeko() and ftello() exist */
 #define HAVE_SIGACTION 0  /* sigaction() exists */
 #define HAVE_SIGPROCMASK 1  /* sigprocmask() exists */
 #define ALLOW_INTERRUPT 1 /* no --disable-interrupt */

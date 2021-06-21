@@ -9,7 +9,7 @@ used, it is necessary to check they are correct.
 ====================================================================*/
 
 /* Check whether various headers are available */
-
+#pragma once
 #define HAVE_ISATTY 1       /* if isatty() is available */
 #define HAVE_TIMES 1        /* if times() is available */
 #define HAVE_TIME 1         /* if time() is available */

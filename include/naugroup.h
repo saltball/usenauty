@@ -2,7 +2,7 @@
 
 Procedures for handling groups found by nauty.
 */
-
+#pragma once
 #include "nauty.h"
 
 typedef struct perm_struct

@@ -10,7 +10,7 @@
          use GETKRAN(k,var) to set the variable var to a better
          random number 0..k-1.
 */
-
+#pragma once
 #ifndef NAURNG_H
 #include "nauty.h"
 

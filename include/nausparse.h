@@ -19,7 +19,7 @@
 *       17-Dec-15 : add macros for weighted graphs                           *
 *                                                                            *
 *****************************************************************************/
-
+#pragma once
 #ifndef  _NAUSPARSE_H_    /* only process this file once */
 #define  _NAUSPARSE_H_
 

@@ -1087,6 +1087,7 @@ putam(FILE *f, graph *g, int linelength, _Boolean space, _Boolean triang,
 /**************************************************************************/
 /**************************************************************************/
 
+#ifndef ASLIB
 int
 main(int argc, char *argv[])
 {
@@ -1236,3 +1237,4 @@ main(int argc, char *argv[])
 
     exit(0);
 }
+#endif

@@ -35,6 +35,8 @@ extern "C" {
 
 #ifdef __GNUC__
 #include <sys/time.h> /* for timeval */
+#else
+#include <time.h>
 #endif /* __GNUC__  */
 
 #include <errno.h>
