@@ -18,4 +18,4 @@ File and `wait.h` is from `https://github.com/win32ports`, By MIT License. Some 
 File `times.h` is used for necessary function and types.
 # Other info
 This repo is try to use `nauty` for some chemical research and create some new API. It's still on going.
-Source COPYRIGHT License is [COPYRIGHT](libnauty\COPYRIGHT)
+Original License is [COPYRIGHT](libnauty/COPYRIGHT)
