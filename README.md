@@ -1,6 +1,6 @@
 # File Comments
-## Files difference with source library codes
-Changed some files for source (https://pallini.di.uniroma1.it/index.html) Version 2.7R1 (MAY 19 2019):
+## File differences with source library codes
+Changed some files from source (https://pallini.di.uniroma1.it/index.html) Version 2.7R1 (MAY 19 2019):
 - naututil.h:
     For msvc use, change `<sys/time.h>` to `"times.h"` and `times.c` with Macro defined for arch chioce.
 - gtools.h:
@@ -18,3 +18,4 @@ File and `wait.h` is from `https://github.com/win32ports`, By MIT License. Some 
 File `times.h` is used for necessary function and types.
 # Other info
 This repo is try to use `nauty` for some chemical research and create some new API. It's still on going.
+Source COPYRIGHT License is [COPYRIGHT](libnauty\COPYRIGHT)
