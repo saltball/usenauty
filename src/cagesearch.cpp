@@ -280,11 +280,152 @@ void CageSearcher::output_color_pattern(int numaddons)
     lastrejok = FALSE;
     for (i = 0; i < in; ++i)
         col[i] = 0;
-
     scan_console(0, g, FALSE, prev, minedges, maxedges, 0, numcols, group, im, in);
 }
 void CageSearcher::output_color_pattern(int numaddons, std::vector<std::vector<int>> &colpair)
 {
+    static DEFAULTOPTIONS_GRAPH(options);
+    statsblk stats;
+    setword workspace[MAXNV];
+    grouprec *group;
+    int i, j, k, nloops;
+    set *gi, *gj;
+    int lab[MAXNV], ptn[MAXNV], orbits[MAXNV];
+    _Boolean loop[MAXNV];
+    int prev[MAXNV]; /* If >= 0, earlier point that must have greater colour */
+    int weight[MAXNV];
+    int region, start, stop;
+    int nfixed = 0;
+    int minedges, maxedges;
+
+    minedges = numaddons;
+    maxedges = numaddons;
+
+    int numcols = 2;
+
+    if (in > MAXNV)
+        gt_abort("Error: MAXNV exceeded\n");
+    // nauty_check(WORDSIZE, im, in, NAUTYVERSIONID);
+
+    nloops = 0;
+    for (i = 0, gi = g; i < in; ++i, gi += im)
+        if (ISELEMENT(gi, i))
+        {
+            DELELEMENT(gi, i);
+            loop[i] = TRUE;
+            ++nloops;
+        }
+        else
+            loop[i] = FALSE;
+
+    for (region = 0; region < 2; ++region)
+    {
+        if (region == 0)
+        {
+            if (nfixed == 0)
+                continue;
+            start = 0;
+            stop = nfixed;
+            if (stop > in)
+                stop = in;
+        }
+        else
+        {
+            if (nfixed >= in)
+                continue;
+            start = nfixed;
+            stop = in;
+        }
+
+        for (i = start, gi = g + im * (size_t)start; i < stop; ++i, gi += im)
+        {
+            /* Find most recent equivalent j. */
+            for (j = i - 1, gj = gi - im; j >= start; --j, gj -= im)
+            {
+                if (loop[j] != loop[i])
+                    continue;
+                for (k = 0; k < im; ++k)
+                    if (gi[k] != gj[k])
+                        break;
+                if (k < im)
+                {
+                    FLIPELEMENT(gi, i);
+                    FLIPELEMENT(gj, j);
+                    for (k = 0; k < im; ++k)
+                        if (gi[k] != gj[k])
+                            break;
+                    FLIPELEMENT(gi, i);
+                    FLIPELEMENT(gj, j);
+                }
+                if (k == im)
+                    break;
+            }
+            if (j >= start)
+            {
+                prev[i] = j;
+                weight[i] = weight[j] + 1;
+            }
+            else
+            {
+                prev[i] = -1;
+                weight[i] = 0;
+            }
+        }
+    }
+
+    if (in == 0)
+    {
+        scan_stdvec(0, g, FALSE, prev, minedges, maxedges, 0, numcols, FALSE, im, in, colpair);
+        return;
+    }
+
+    for (i = nfixed; i < in; ++i)
+        weight[i] += nfixed;
+
+    if (maxedges == NOLIMIT || maxedges > in * numcols)
+        maxedges = in * numcols;
+    if (in * numcols < minedges)
+        return;
+
+    options.userautomproc = groupautomproc;
+    options.userlevelproc = grouplevelproc;
+    options.defaultptn = FALSE;
+    options.digraph = (nloops > 0);
+
+    setlabptn(weight, lab, ptn, in);
+
+    if (nloops > 0)
+        for (i = 0, gi = g; i < in; ++i, gi += im)
+            if (loop[i])
+                ADDELEMENT(gi, i);
+
+    nauty(g, lab, ptn, NULL, orbits, &options, &stats, workspace, MAXNV, im, in, NULL);
+
+    if (stats.grpsize2 == 0)
+        groupsize = stats.grpsize1 + 0.1;
+    else
+        groupsize = 0;
+
+    group = groupptr(FALSE);
+    makecosetreps(group);
+
+    if (stats.numorbits < in)
+    {
+        j = in;
+        for (i = 0; i < in; ++i)
+            if (orbits[i] < i && orbits[i] < j)
+                j = orbits[i];
+
+        for (i = j + 1; i < in; ++i)
+            if (orbits[i] == j)
+                prev[i] = j;
+    }
+
+    lastrejok = FALSE;
+    for (i = 0; i < in; ++i)
+        col[i] = 0;
+
+    scan_stdvec(0, g, FALSE, prev, minedges, maxedges, 0, numcols, group, im, in, colpair);
 }
 
 static void
@@ -499,6 +640,39 @@ scan_console(int level, graph *g, _Boolean digraph, int *prev, long minedges, lo
 }
 
 static int
+scan_stdvec(int level, graph *g, _Boolean digraph, int *prev, long minedges, long maxedges,
+            long sofar, long numcols, grouprec *group, int m, int n, std::vector<std::vector<int>> &colpair)
+/* Recursive scan for default case */
+/* Returned value is level to return to. */
+{
+    int left;
+    long min, max, k, ret;
+
+    if (level == n)
+        return trythisone2stdvec(group, g, digraph, m, n, colpair);
+
+    left = n - level - 1;
+    min = minedges - sofar - numcols * left;
+    if (min < 0)
+        min = 0;
+    max = maxedges - sofar;
+    if (max >= numcols)
+        max = numcols - 1;
+    if (prev[level] >= 0 && col[prev[level]] < max)
+        max = col[prev[level]];
+
+    for (k = min; k <= max; ++k)
+    {
+        col[level] = k;
+        ret = scan_stdvec(level + 1, g, digraph, prev, minedges, maxedges, sofar + k, numcols, group, m, n, colpair);
+        if (ret < level)
+            return ret;
+    }
+
+    return level - 1;
+}
+
+static int
 ismax(int *p, int n)
 /* test if col^p <= col */
 {
@@ -593,8 +767,8 @@ trythisone2console(grouprec *group, graph *g, _Boolean digraph, int m, int n)
         // fprintf(outfile, "%d %lu", n, (unsigned long)ne);
 
         for (i = 0; i < n; ++i)
-            if(col[i])
-            std::cout << i<<" ";
+            if (col[i])
+                std::cout << i << " ";
         std::cout << " ";
         // for (i = 0, gi = g; i < n; ++i, gi += m)
         // {
@@ -602,6 +776,69 @@ trythisone2console(grouprec *group, graph *g, _Boolean digraph, int m, int n)
         //         fprintf(outfile, " %d %d", i, j);
         // }
         std::cout << "\n";
+
+        return n - 1;
+    }
+    else
+        return fail_level - 1;
+}
+
+static int
+trythisone2stdvec(grouprec *group, graph *g, _Boolean digraph, int m, int n, std::vector<std::vector<int>> &colpair)
+/* Try one solution, accept if maximal. */
+/* Return value is level to return to. */
+{
+    int i, j;
+    _Boolean accept;
+    graph *gi;
+    size_t ne;
+    std::vector<int> one_pattern;
+
+    newgroupsize = 1;
+
+    if (!group || groupsize == 1)
+        accept = TRUE;
+    else if (lastrejok && !ismax(lastreject, n))
+        accept = FALSE;
+    else if (lastrejok && groupsize == 2)
+        accept = TRUE;
+    else
+    {
+        newgroupsize = 1;
+        first = TRUE;
+
+        if (allgroup2(group, testmax) == 0)
+            accept = TRUE;
+        else
+            accept = FALSE;
+    }
+
+    if (accept)
+    {
+        ++vc_nout;
+
+        ne = 0;
+        for (gi = g + m * (size_t)n; --gi >= g;)
+            ne += POPCOUNT(*gi);
+        if (!digraph)
+        {
+            for (i = 0, gi = g; i < n; ++i, gi += m)
+                if (ISELEMENT(gi, i))
+                    ++ne;
+            ne /= 2;
+        }
+        // fprintf(outfile, "%d %lu", n, (unsigned long)ne);
+
+        for (i = 0; i < n; ++i)
+            if (col[i])
+                one_pattern.push_back(i);
+        colpair.push_back(one_pattern);
+        // for (i = 0, gi = g; i < n; ++i, gi += m)
+        // {
+        //     for (j = (digraph ? -1 : i - 1); (j = nextelement(gi, m, j)) >= 0;)
+        //         fprintf(outfile, " %d %d", i, j);
+        // }
+        one_pattern.clear();
 
         return n - 1;
     }

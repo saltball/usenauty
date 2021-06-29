@@ -29,8 +29,9 @@ public:
 void stringtograph(std::string s, graph *g, int m);
 int graphsize(std::string s);
 static void gt_abort(char *msg);
-static int scan_console(int level, graph *g, _Boolean digraph, int *prev, long minedges, long maxedges,
-                        long sofar, long numcols, grouprec *group, int m, int n);
+static int scan_console(int level, graph *g, _Boolean digraph, int *prev, long minedges, long maxedges, long sofar, long numcols, grouprec *group, int m, int n);
 static int trythisone2console(grouprec *group, graph *g, _Boolean digraph, int m, int n);
+static int scan_stdvec(int level, graph *g, _Boolean digraph, int *prev, long minedges, long maxedges, long sofar, long numcols, grouprec *group, int m, int n,std::vector<std::vector<int>> &colpair);
+static int trythisone2stdvec(grouprec *group, graph *g, _Boolean digraph, int m, int n,std::vector<std::vector<int>> &colpair);
 
 #endif
