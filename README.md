@@ -2,7 +2,7 @@
 ## File differences with source library codes
 Changed some files from source (https://pallini.di.uniroma1.it/index.html) Version 2.7R1 (MAY 19 2019):
 - naututil.h:
-    For msvc use, change `<sys/time.h>` to `"times.h"` and `times.c` with Macro defined for arch chioce.
+    For msvc use, change `<sys/time.h>` to `"times.h"` and `times.c` with Macro defined for arch choice.
 - gtools.h:
     For msvc use, change `<sys/wait.h>` to `"wait.h"`
 - showg.c:
