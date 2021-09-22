@@ -138,7 +138,7 @@ void CageSearcher::output_graph(std::vector<std::vector<int>> &adjmat)
     }
 }
 
-void CageSearcher::output_color_pattern(int numaddons)
+void CageSearcher::output_color_pattern(int numaddons, std::vector<int> &old_color)
 {
     static DEFAULTOPTIONS_GRAPH(options);
     statsblk stats;
@@ -156,7 +156,8 @@ void CageSearcher::output_color_pattern(int numaddons)
 
     minedges = numaddons;
     maxedges = numaddons;
-
+    
+    
     int numcols = 2;
 
     if (in > MAXNV)
@@ -231,7 +232,7 @@ void CageSearcher::output_color_pattern(int numaddons)
 
     if (in == 0)
     {
-        scan_console(0, g, FALSE, prev, minedges, maxedges, 0, numcols, FALSE, im, in);
+        scan_console(0, g, FALSE, prev, minedges, maxedges, 0, numcols, FALSE, im, in, old_color);
         return;
     }
 
@@ -278,9 +279,16 @@ void CageSearcher::output_color_pattern(int numaddons)
     }
 
     lastrejok = FALSE;
+
     for (i = 0; i < in; ++i)
         col[i] = 0;
-    scan_console(0, g, FALSE, prev, minedges, maxedges, 0, numcols, group, im, in);
+
+    //for (int i = 0; i < old_color.size(); i++)
+    //{
+    //    col[old_color[i]] = 1;      
+    //}
+
+    scan_console(0, g, FALSE, prev, minedges, maxedges, 0, numcols, group, im, in, old_color);
 }
 
 void CageSearcher::output_color_pattern(int numaddons, std::ofstream &output_color_pattern_to_file)
@@ -754,7 +762,7 @@ int graphsize(std::string s)
 
 static int
 scan_console(int level, graph *g, _Boolean digraph, int *prev, long minedges, long maxedges,
-             long sofar, long numcols, grouprec *group, int m, int n)
+             long sofar, long numcols, grouprec *group, int m, int n, std::vector<int> &old_color)
 /* Recursive scan for default case */
 /* Returned value is level to return to. */
 {
@@ -762,7 +770,31 @@ scan_console(int level, graph *g, _Boolean digraph, int *prev, long minedges, lo
     long min, max, k, ret;
 
     if (level == n)
+    {
+        //for (int i = 0; i < old_color.size(); i++)
+        //{
+        //    if (col[old_color[i]] == 0)
+        //    {
+        //        return level - 1;
+        //    }
+        //}
+
+
+
+
         return trythisone2console(group, g, digraph, m, n);
+    }
+
+
+    for (int i = 0; i < old_color.size(); i++)
+    {
+        if (col[old_color[i]] == 0)
+        {
+            col[old_color[i]] = 1;
+            sofar++;
+        }
+    }
+
 
     left = n - level - 1;
     min = minedges - sofar - numcols * left;
@@ -774,10 +806,26 @@ scan_console(int level, graph *g, _Boolean digraph, int *prev, long minedges, lo
     if (prev[level] >= 0 && col[prev[level]] < max)
         max = col[prev[level]];
 
+
+
+
+
+
     for (k = min; k <= max; ++k)
     {
+
+
+        for (int i = 0; i < old_color.size(); i++)
+        {
+            if (level == old_color[i])
+            {
+                level = old_color[i] + 1;
+                continue;
+            }
+        }
+
         col[level] = k;
-        ret = scan_console(level + 1, g, digraph, prev, minedges, maxedges, sofar + k, numcols, group, m, n);
+        ret = scan_console(level + 1, g, digraph, prev, minedges, maxedges, sofar + k, numcols, group, m, n, old_color);
         if (ret < level)
             return ret;
     }
@@ -878,6 +926,9 @@ trythisone2console(grouprec *group, graph *g, _Boolean digraph, int m, int n)
     size_t ne;
 
     newgroupsize = 1;
+    
+
+
 
     if (!group || groupsize == 1)
         accept = TRUE;
