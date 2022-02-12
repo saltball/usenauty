@@ -25,7 +25,7 @@ SOFTWARE.
 
 #ifndef _WIN32
 
-#pragma message("this unistd.h implementation is for Windows only!")
+#include <unistd.h>
 
 #else /* _WIN32 */
 

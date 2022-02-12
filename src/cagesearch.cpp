@@ -574,7 +574,7 @@ void CageSearcher::output_color_pattern(int numaddons, std::vector<std::vector<i
     scan_stdvec(0, g, FALSE, prev, minedges, maxedges, 0, numcols, group, im, in, colpair);
 }
 
-static void
+void
 stringtograph(std::string s, graph *g, int m)
 /* Convert string (graph6, digraph6 or sparse6 format) to graph. */
 /* Assumes g is big enough to hold it.   */
