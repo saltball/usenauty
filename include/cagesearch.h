@@ -43,7 +43,7 @@ public:
     void output_color_pattern(int numaddons, std::ofstream& output_color_pattern_to_file, int random_num);
     void output_color_pattern(int numaddons, std::ofstream& output_color_pattern_to_file, std::vector<int>& old_color);
 };
-void stringtograph(std::string s, graph* g, int m);
+static void stringtograph(std::string s, graph* g, int m);
 int graphsize(std::string s);
 static void gt_abort(char* msg);
 static int scan_console(int level, graph* g, _Boolean digraph, int* prev, long minedges, long maxedges, long sofar, long numcols, grouprec* group, int m, int n);
