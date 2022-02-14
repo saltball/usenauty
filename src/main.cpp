@@ -98,13 +98,15 @@ int main(int argc, char* argv[])
     }
     else if (mode == "step")
     {
-        std::cout << "Current usenauty mode is: " << mode << std::endl;
-        if (a.rest().size() == 0)
-            gt_abort("The rest part of commandline is taken as fixed addon position, thus its length should be greater than 0.\n");
+        std::string prev_seq = a.rest()[0];
         std::vector<int> old_color;
-        for (int i = 0; i < a.rest().size(); i++)
+        std::istringstream iss(prev_seq);
+        std::string temp;
+        int temp_int;
+        while (getline(iss, temp, '_'))
         {
-            old_color.push_back(std::stoi(a.rest()[i]));
+            temp_int = std::stoi(temp);
+            old_color.push_back(temp_int);
         }
         Cages.output_color_pattern(Naddons, outPutPathFileStream, old_color);
     }
