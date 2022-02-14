@@ -31,14 +31,14 @@ public:
     void init_graph_from_str(std::string s);
     void output_graph();
     void output_graph(std::vector<std::vector<int>> &adjmat);
-    void output_color_pattern(int numaddons);
+    void output_color_pattern(int numaddons, std::vector<int> &old_color);
     void output_color_pattern(int numaddons, std::vector<std::vector<int>> &colpair);
     void output_color_pattern(int numaddons, std::ofstream &output_color_pattern_to_file);
 };
 void stringtograph(std::string s, graph *g, int m);
 int graphsize(std::string s);
 static void gt_abort(char *msg);
-static int scan_console(int level, graph *g, _Boolean digraph, int *prev, long minedges, long maxedges, long sofar, long numcols, grouprec *group, int m, int n);
+static int scan_console(int level, graph *g, _Boolean digraph, int *prev, long minedges, long maxedges, long sofar, long numcols, grouprec *group, int m, int n, std::vector<int> &old_color);
 static int trythisone2console(grouprec *group, graph *g, _Boolean digraph, int m, int n);
 static int scan_stdvec(int level, graph *g, _Boolean digraph, int *prev, long minedges, long maxedges, long sofar, long numcols, grouprec *group, int m, int n, std::vector<std::vector<int>> &colpair);
 static int trythisone2stdvec(grouprec *group, graph *g, _Boolean digraph, int m, int n, std::vector<std::vector<int>> &colpair);
