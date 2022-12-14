@@ -1,7 +1,7 @@
 import networkx as nx
-from fullerenedatapraser.molecular.fullerene import FullereneFamily
-from fullerenedatapraser.io.xyz import simple_read_xyz_xtb
-from fullerenedatapraser.io.recursion import recursion_files
+from fullerenedataparser.molecular.fullerene import FullereneFamily
+from fullerenedataparser.io.xyz import simple_read_xyz_xtb
+from fullerenedataparser.io.recursion import recursion_files
 import os
 
 
