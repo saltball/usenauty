@@ -9,7 +9,7 @@ SOURCE_ROOT = r'./'
 path_cage = r'./'
 addon_num = 4
 
-CAGE_SEARCH_PATH = r'../bin/cagesearch.exe'
+CAGE_SEARCH_PATH = os.path.abspath(r'../bin/cagesearch.exe')
 
 
 def get_one_atoms(source_root_path):
