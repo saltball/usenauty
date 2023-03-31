@@ -340,7 +340,7 @@ void CageSearcher::output_graph(std::vector<std::vector<int>>& adjmat)
 	}
 }
 
-static void
+void
 stringtograph(std::string s, graph* g, int m)
 /* Convert string (graph6, digraph6 or sparse6 format) to graph. */
 /* Assumes g is big enough to hold it.   */

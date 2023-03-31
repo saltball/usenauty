@@ -245,7 +245,7 @@ extern "C"
 #include "time.h"
 #include "times.h"
 #elif __linux__
-#include <sys/time.h>
+#include <sys/times.h>
 #endif
 #define CPUDEFS static TLS_ATTR struct tms timebuffer;
 #ifndef CLK_TCK
@@ -264,7 +264,7 @@ extern "C"
 #include "time.h"
 #include "times.h"
 #elif __linux__
-#include <sys/time.h>
+#include <sys/times.h>
 #endif
 #include <sys/resource.h>
 #define CPUDEFS struct rusage ruse;
@@ -288,7 +288,7 @@ extern "C"
 #include "time.h"
 #include "times.h"
 #elif __linux__
-#include <sys/time.h>
+#include <sys/times.h>
 #endif
 #define INITSEED                                                               \
   {                                                                            \
@@ -302,7 +302,7 @@ extern "C"
 #include "time.h"
 #include "times.h"
 #elif __linux__
-#include <sys/time.h>
+#include <sys/times.h>
 #endif
 #define INITSEED seed = ((time((time_t *)NULL) << 1) | 1) & 0x7FFFFFFFL
 #endif
@@ -317,7 +317,7 @@ extern "C"
 #include "time.h"
 #include "times.h"
 #elif __linux__
-#include <sys/time.h>
+#include <sys/times.h>
 #endif
 #define REALTIMEDEFS struct timeval nauty_rtv;
 #define NAUTYREALTIME (gettimeofday(&nauty_rtv, NULL), \
@@ -328,7 +328,7 @@ extern "C"
 #include "time.h"
 #include "times.h"
 #elif __linux__
-#include <sys/time.h>
+#include <sys/times.h>
 #endif
 #define REALTIMEDEFS
 #define NAUTYREALTIME ((double)time(NULL))
