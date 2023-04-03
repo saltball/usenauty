@@ -2,7 +2,7 @@
 
 ## Before compiling
 
-please check the [Releases](https://github.com/Franklalalala/usenauty/releases). There are pre-compiled linux and windows versions, respectively.
+please check the [Releases](https://github.com/Franklalalala/usenauty/releases). There are pre-compiled linux (gcc 8.4.0) and windows(gnu8.3.0 & MSVC 19.29.30037.0) versions, respectively.
 
 ## Compile a linux version
 
@@ -55,6 +55,28 @@ One needs to prepare a compiler and cmake that meets requirements. See above.
 
 The compile lines are the same as above.
 
+## Note for compiler version
+
+Generally speaking, a binary file that compiled from an advanced compiler may achieve a better performance, especially for computation intensive programs. Therefore, we recommend the compilers that satisfies the [CXX 17 standard](https://en.wikipedia.org/wiki/C%2B%2B17). 
+
+On the other hand, for users who do not have the latest version of compiler, some changes of the `CMakeLists.txt` may help:
+
+1. For a lower version of compiler, change the line in [CMakeLists.txt](https://github.com/Franklalalala/usenauty/blob/6cbecb9241538b83ffb0daaafa7ab78206fe2cff/CMakeLists.txt#L4) to:
+
+```
+set(CMAKE_CXX_STANDARD 14)
+```
+
+This will lower the compiler version requirements to [CXX 14 standard](https://en.wikipedia.org/wiki/C%2B%2B14).
+
+2. For a lower version of cmake, change the line in [CMakeLists.txt](https://github.com/Franklalalala/usenauty/blob/6cbecb9241538b83ffb0daaafa7ab78206fe2cff/CMakeLists.txt#L1) and [src/CMakeLists.txt](https://github.com/Franklalalala/usenauty/blob/6cbecb9241538b83ffb0daaafa7ab78206fe2cff/src/CMakeLists.txt#L1):
+
+```
+cmake_minimum_required(VERSION 3.0)
+```
+
+This will lower the cmake version requirements to 3.0.
+
 # File Comments
 
 ## File differences with source library codes
@@ -67,13 +89,6 @@ Changed some files from [source](https://pallini.di.uniroma1.it/index.html) Vers
   For msvc use, change `<sys/wait.h>` to `"wait.h"`
 - showg.c:
   Add a compiler choice `ASLIB`
-
-## Simple command line test
-
-* Mode test and speed test for fullerene systems in `cmd_test/fullerene`
-
-* One dimension PBC system in `cmd_test/cabon_nano_tube`
-* Two dimension PBC system in `cmd_test/graphene_nano_ribbon`
 
 # Code structure and function enhancement information
 
@@ -90,6 +105,10 @@ Additionally, this project conducted several changes comparing to the original m
 * The step and random mode are created on top of the base mode.
 * Code structures are refactored to enable some suitable API.
 * Several test files in `./cmd_test/` folder.
+  * Mode test and speed test for fullerene systems in `cmd_test/fullerene`
+  * One dimension PBC system in `cmd_test/cabon_nano_tube`
+  * Two dimension PBC system in `cmd_test/graphene_nano_ribbon`
+
 * Bugs fixed for compilation in the Linux platform. (credit to @saltball)
 
 # Other info
